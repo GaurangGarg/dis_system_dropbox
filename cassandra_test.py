@@ -4,6 +4,7 @@ from cassandra import ConsistencyLevel
 from cassandra.cluster import Cluster
 from cassandra.query import SimpleStatement
 
+
 log = logging.getLogger()
 log.setLevel('DEBUG')
 handler = logging.StreamHandler()
@@ -11,12 +12,45 @@ handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(
 log.addHandler(handler)
 
 
-def main():
+KEYSPACE = "files"
+
+
+def initialize_cassandra_cluster():
     cluster = Cluster(['52.40.197.16', '52.11.0.58', '54.70.142.196', '54.70.139.205', '52.27.28.162'])
-    # cluster = Cluster(['52.40.197.16'])
     session = cluster.connect()
 
-    KEYSPACE = "testkeyspace"
+    log.info("creating keySpace...")
+    session.execute("""
+            CREATE KEYSPACE %s
+            WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '4' }
+            """ % KEYSPACE)
+
+    log.info("setting keyspace...")
+    session.set_keyspace(KEYSPACE)
+
+    log.info("creating table...")
+
+    session.execute("""
+            CREATE TABLE fileinfo (
+                filename text,
+                filecontent text,
+                PRIMARY KEY (filename, filecontent)
+            )
+            """)
+
+
+def destroy_cassandra_cluster():
+    try:
+        cluster = Cluster(['52.40.197.16', '52.11.0.58', '54.70.142.196', '54.70.139.205', '52.27.28.162'])
+        session = cluster.connect()
+        session.execute("DROP KEYSPACE " + KEYSPACE)
+    except Exception as e:
+        log.exception(e.message)
+
+
+def cassandra_test():
+    cluster = Cluster(['52.40.197.16', '52.11.0.58', '54.70.142.196', '54.70.139.205', '52.27.28.162'])
+    session = cluster.connect()
 
     log.info("creating keyspace...")
     session.execute("""
@@ -67,4 +101,5 @@ def main():
     session.execute("DROP KEYSPACE " + KEYSPACE)
 
 if __name__ == "__main__":
-    main()
+    initialize_cassandra_cluster()
+    #destroy_cassandra_cluster()

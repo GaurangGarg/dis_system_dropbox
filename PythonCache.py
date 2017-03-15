@@ -19,6 +19,9 @@ class PythonCache:
     def get(self, key):
         return self.cache.get(key, {})
 
+    def remove(self, key):
+        self.cache.pop(key, None)
+        return
 
     def update(self, key, value):
 

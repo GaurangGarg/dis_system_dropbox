@@ -1,8 +1,8 @@
 from flask import Flask, request
 import PythonCache
 
-app = Flask(__name__) # WSGI app
 
+app = Flask(__name__) # WSGI app
 cache = PythonCache.PythonCache()
 
 
@@ -18,6 +18,17 @@ def get():
     return response
 
 
+@app.route('/delete', methods=['POST'])
+def delete():
+    response = ''
+
+    if request.method == 'POST':
+        key = request.form.get('key')
+        response = cache.remove(key)
+
+    return ''
+
+
 @app.route('/set', methods=['POST'])
 def set():
     if request.method == 'POST':
@@ -29,3 +40,4 @@ def set():
 
 if __name__ == "__main__": # upgrade flask to latest version > 0.11 so can run app from CLI
     app.run(port=6002) # 127.0.0.1:5000 by default
+
