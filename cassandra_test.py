@@ -39,7 +39,7 @@ def create_cassandra_cluster():
             CREATE TABLE fileinfo (
                 filename text,
                 filecontent text,
-                PRIMARY KEY (filename, filecontent)
+                PRIMARY KEY (filename)
             )
             """)
 
@@ -78,7 +78,7 @@ def cassandra_test():
     query = SimpleStatement("""
         INSERT INTO fileinfo (filename, filecontent)
         VALUES (%(key)s, %(a)s)
-        """, consistency_level=ConsistencyLevel.ONE)
+        """, consistency_level=ConsistencyLevel.ANY)
 
     prepared = session.prepare("""
         INSERT INTO fileinfo (filename, filecontent)
