@@ -16,6 +16,9 @@ class PythonCache:
     def contains(self, key):
         return key in self.cache
 
+    def get(self, key):
+        return self.cache.get(key, {})
+
 
     def update(self, key, value):
 
