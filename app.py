@@ -12,7 +12,7 @@ from cassandra.query import SimpleStatement
 import logging
 
 
-logging.basicConfig(filename='app.log',level=logging.DEBUG)
+logging.basicConfig(filename='app.log',level=logging.ERROR)
 
 KEYSPACE = "files"
 
@@ -77,10 +77,13 @@ def get():
     except Exception as e:
         print e.message
 
-    if file_content == r.text:
+    if not r or file_content == r.text:
         res = requests.post('http://127.0.0.1:6002/delete', data={'key': filename})
-
-    return r.text
+        logging.error("Consistent.")
+        return file_content
+    else:
+        logging.error("Inconsistent.")
+        return r.text
 
 
 if __name__ == "__main__":

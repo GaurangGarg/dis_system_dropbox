@@ -16,6 +16,11 @@ KEYSPACE = "files"
 
 
 def initialize_cassandra_cluster():
+    destroy_cassandra_cluster()
+    create_cassandra_cluster()
+
+
+def create_cassandra_cluster():
     cluster = Cluster(['52.40.197.16', '52.11.0.58', '54.70.142.196', '54.70.139.205', '52.27.28.162'])
     session = cluster.connect()
 
@@ -102,4 +107,3 @@ def cassandra_test():
 
 if __name__ == "__main__":
     initialize_cassandra_cluster()
-    #destroy_cassandra_cluster()
