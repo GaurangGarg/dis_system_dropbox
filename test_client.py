@@ -25,7 +25,7 @@ def driver():
     key = uuid.uuid4()
     logging.error("Key: {}".format(key))
     i = 0
-    num_writes = 100
+    num_writes = 1000
     while i < num_writes:
         value = uuid.uuid4()
         post(key, value)

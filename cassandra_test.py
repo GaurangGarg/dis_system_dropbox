@@ -23,11 +23,10 @@ def initialize_cassandra_cluster():
 def create_cassandra_cluster():
     cluster = Cluster(['52.40.197.16', '52.11.0.58', '54.70.142.196', '54.70.139.205', '52.27.28.162'])
     session = cluster.connect()
-
     log.info("creating keySpace...")
     session.execute("""
             CREATE KEYSPACE %s
-            WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '4' }
+            WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '2' }
             """ % KEYSPACE)
 
     log.info("setting keyspace...")

@@ -27,7 +27,7 @@ def post():
         query = SimpleStatement("""
                 INSERT INTO fileinfo (filename, filecontent)
                 VALUES (%(key)s, %(value)s)
-                """, consistency_level=ConsistencyLevel.ANY)
+                """, consistency_level=ConsistencyLevel.ONE)
         session.execute(query, dict(key=filename, value=data))
     return response
 
